@@ -1,0 +1,2 @@
+Assumption 1:
+	- The CSV file is formatted always correctly, always Delimited with ";", always follows the same type throught the file, files are always ordered by date
