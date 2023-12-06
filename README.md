@@ -25,5 +25,9 @@ This tool provides a comprehensive analysis of investments based on CSV data fil
 Run the program and follow the on-screen instructions. You will be prompted to enter a date and an investor ID in the format `<date>;<investorid>`. The tool will then display the total value of the investments for the specified investor as of the given date.
 
 ## Data Error
-For some investments, it could happen that a transaction for a stock goes throught before an available quotation, here the stock is not taken into account. Example of data inconsistency: Investment21067.
+For some investments, it could happen that a transaction for a stock goes throught before an available quotation, here the stock is not taken into account. Example of data inconsistency: Investment21067. <br>
 Here Investment21067 describes that 144.88 shares are bought at the 12/01/2016 however the first available quotation for ISIN70 is the 28/06/2016.
+
+## Git History
+Git history available at http://github.com/Frititati/QPLIX_Aufgabe.<br>
+If I should remove this from github please let me know, and I will do it immediatelly.
