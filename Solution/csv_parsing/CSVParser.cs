@@ -5,7 +5,6 @@ namespace Solution.csv_parsing
 {
     internal class CSVParser
     {
-        // TODO have to order values
         public List<Transaction> parseTransactions(string filePath)
         {
             // prepare the return object
@@ -38,7 +37,7 @@ namespace Solution.csv_parsing
                         // create a new object of Transaction and place all values from row inside the object
                         Transaction transaction = new Transaction
                         {
-                            InvestmentId = row[0],
+                            // InvestmentId = row[0],
                             Type = row[1],
                             Date = DateTime.Parse(row[2]),
                             Value = Decimal.Parse(row[3])
@@ -83,12 +82,67 @@ namespace Solution.csv_parsing
                         // create a new object of Transaction and place all values from row inside the object
                         Transaction transaction = new Transaction
                         {
-                            InvestmentId = row[0],
+                            // InvestmentId = row[0],
                             Type = row[1],
                             Date = DateTime.Parse(row[2]),
                             Value = Decimal.Parse(row[3])
                         };
                         result.Add(transaction);
+                    }
+                    catch (Exception ex)
+                    {
+                        // TODO: Improve error message
+                        Console.WriteLine(ex.ToString());
+                    }
+                }
+            }
+            return result;
+        }
+
+        public Dictionary<string, List<Transaction>> parseTransactionsFasterDictionary(string filePath)
+        {
+            // prepare the return object
+            Dictionary<string, List<Transaction>> result = new();
+
+            // uses string Split() method, much faster the TextFieldParser
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+                char[] delimiters = new char[] { ';' };
+                reader.ReadLine();
+
+                while (true)
+                {
+                    string line = reader.ReadLine();
+                    if (line == null)
+                    {
+                        break;
+                    }
+
+                    string[] row = line.Split(delimiters);
+
+                    // added a try/catch to make sure if there is something the doesn't match
+                    // Assumption 1, the program doesn't break unexpectedly
+                    try
+                    {
+                        // create a new object of Transaction and place all values from row inside the object
+                        Transaction transaction = new Transaction
+                        {
+                            Type = row[1],
+                            Date = DateTime.Parse(row[2]),
+                            Value = Decimal.Parse(row[3])
+                        };
+
+                        if (result.ContainsKey(row[0]))
+                        {
+                            // update the existing entry
+                            result[row[0]].Add(transaction);
+                        }
+                        else
+                        {
+                            // create new entry
+                            result[row[0]] = new List<Transaction> { transaction };
+
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -132,7 +186,7 @@ namespace Solution.csv_parsing
                         // create a new object of Quote and place all values from row inside the object
                         Quote quote = new Quote
                         {
-                            ISIN = row[0],
+                            // ISIN = row[0],
                             Date = DateTime.Parse(row[1]),
                             PricePerShare = Decimal.Parse(row[2])
                         };
@@ -176,11 +230,65 @@ namespace Solution.csv_parsing
                         // create a new object of Transaction and place all values from row inside the object
                         Quote quote = new Quote
                         {
-                            ISIN = row[0],
+                            // ISIN = row[0],
                             Date = DateTime.Parse(row[1]),
                             PricePerShare = Decimal.Parse(row[2])
                         };
                         result.Add(quote);
+                    }
+                    catch (Exception ex)
+                    {
+                        // TODO: Improve error message
+                        Console.WriteLine(ex.ToString());
+                    }
+                }
+            }
+            return result;
+        }
+
+        public Dictionary<string, List<Quote>> parseQuotesFasterDictionary(string filePath)
+        {
+            // prepare the return object
+            Dictionary<string, List<Quote>> result = new();
+
+            // uses string Split() method, much faster the TextFieldParser
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+                char[] delimiters = new char[] { ';' };
+                reader.ReadLine();
+
+                while (true)
+                {
+                    string line = reader.ReadLine();
+                    if (line == null)
+                    {
+                        break;
+                    }
+
+                    string[] row = line.Split(delimiters);
+
+                    // added a try/catch to make sure if there is something the doesn't match
+                    // Assumption 1, the program doesn't break unexpectedly
+                    try
+                    {
+                        // create a new object of Transaction and place all values from row inside the object
+                        Quote quote = new Quote
+                        {
+                            // ISIN = row[0],
+                            Date = DateTime.Parse(row[1]),
+                            PricePerShare = Decimal.Parse(row[2])
+                        };
+
+                        if (result.ContainsKey(row[0]))
+                        {
+                            // update the existing entry
+                            result[row[0]].Add(quote);
+                        }
+                        else
+                        {
+                            // create new entry
+                            result[row[0]] = new List<Quote> { quote };
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -224,7 +332,7 @@ namespace Solution.csv_parsing
                         // create a new object of Investment and place all values from row inside the object
                         Investment investment = new Investment
                         {
-                            InvestorId = row[0],
+                            // InvestorId = row[0],
                             InvestmentId = row[1],
                             InvestmentType = row[2],
                             ISIN = row[3],
@@ -271,7 +379,7 @@ namespace Solution.csv_parsing
                         // create a new object of Transaction and place all values from row inside the object
                         Investment investment = new Investment
                         {
-                            InvestorId = row[0],
+                            // InvestorId = row[0],
                             InvestmentId = row[1],
                             InvestmentType = row[2],
                             ISIN = row[3],
@@ -279,6 +387,62 @@ namespace Solution.csv_parsing
                             FondsInvestor = row[5],
                         };
                         result.Add(investment);
+                    }
+                    catch (Exception ex)
+                    {
+                        // TODO: Improve error message
+                        Console.WriteLine(ex.ToString());
+                    }
+                }
+            }
+            return result;
+        }
+        public Dictionary<string, List<Investment>> parseInvestmentsFasterDictionary(string filePath)
+        {
+            // prepare the return object
+            Dictionary<string, List<Investment>> result = new();
+
+            // uses string Split() method, much faster the TextFieldParser
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+                char[] delimiters = new char[] { ';' };
+                reader.ReadLine();
+
+                while (true)
+                {
+                    string line = reader.ReadLine();
+                    if (line == null)
+                    {
+                        break;
+                    }
+
+                    string[] row = line.Split(delimiters);
+
+                    // added a try/catch to make sure if there is something the doesn't match
+                    // Assumption 1, the program doesn't break unexpectedly
+                    try
+                    {
+                        // create a new object of Transaction and place all values from row inside the object
+                        Investment investment = new Investment
+                        {
+                            // InvestorId = row[0],
+                            InvestmentId = row[1],
+                            InvestmentType = row[2],
+                            ISIN = row[3],
+                            City = row[4],
+                            FondsInvestor = row[5],
+                        };
+
+                        if (result.ContainsKey(row[0]))
+                        {
+                            // update the existing entry
+                            result[row[0]].Add(investment);
+                        }
+                        else
+                        {
+                            // create a new entry
+                            result[row[0]] = new List<Investment> { investment };
+                        }
                     }
                     catch (Exception ex)
                     {

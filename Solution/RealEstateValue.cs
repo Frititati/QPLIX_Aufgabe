@@ -13,19 +13,16 @@ namespace Solution
         public void SetUpdateBuilding(List<Transaction> transactions)
         {
             building_update_price = 0;
+            // have to skip the first value of the list as its the initial price
             foreach (var transaction in transactions.Skip(1))
             {
                 building_update_price += transaction.Value;
             }
-            //if (transactions.Count > 1)
-            //{
-            //    building_update_price = (List<decimal>)transactions.Skip(1).Select(t => t.Value);
-            //    Console.WriteLine("we were here");
-            //}
         }
         public void SetUpdateEstate(List<Transaction> transactions)
         {
             estate_update_price = 0;
+            // have to skip the first value of the list as its the initial price
             foreach (var transaction in transactions.Skip(1))
             {
                 estate_update_price += transaction.Value;
@@ -37,7 +34,9 @@ namespace Solution
         }
         public override string ToString()
         {
-            return "Name: " + name + "; Building Initial Price: " + building_initial_price + "; Building Updates in Price: " + building_update_price + "; Estate Initial Price: " + estate_initial_price + "; Estate Updates in Price: " + estate_update_price + "; Total Value: " + TotalValue();
+            return "Name: " + name + ";\tBuilding Initial Value: " + Decimal.Round(building_initial_price) + ";\tBuilding Updates in Value: "
+                + Decimal.Round(building_update_price, 2) + ";\tEstate Initial Value: " + Decimal.Round(estate_initial_price, 2)
+                + ";\tEstate Updates in Price: " + Decimal.Round(estate_update_price, 2) + ";\tTotal Value: " + Decimal.Round(TotalValue(), 2);
         }
     }
 }

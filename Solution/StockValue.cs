@@ -18,7 +18,8 @@ namespace Solution
         }
         public override string ToString()
         {
-            return "Name: " + ISIN + "; Number of Shares: " + number_of_shared + "; Price per Share: " + price_per_share + "; Total Value: " + TotalValue();
+            return "Name: " + ISIN + ";\tNumber of Shares: " + number_of_shared + ";\tPrice per Share: "
+                + price_per_share + ";\tTotal Value: " + Decimal.Round(TotalValue(), 2);
         }
     }
 }
