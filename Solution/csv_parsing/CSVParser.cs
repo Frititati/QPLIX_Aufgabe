@@ -5,6 +5,7 @@ namespace Solution.csv_parsing
 {
     internal class CSVParser
     {
+        // TODO have to order values
         public List<Transaction> parseTransactions(string filePath)
         {
             // prepare the return object
@@ -29,6 +30,52 @@ namespace Solution.csv_parsing
                 {
                     // split the individual field of the row
                     string[] row = parser.ReadFields();
+
+                    // added a try/catch to make sure if there is something the doesn't match
+                    // Assumption 1, the program doesn't break unexpectedly
+                    try
+                    {
+                        // create a new object of Transaction and place all values from row inside the object
+                        Transaction transaction = new Transaction
+                        {
+                            InvestmentId = row[0],
+                            Type = row[1],
+                            Date = DateTime.Parse(row[2]),
+                            Value = Decimal.Parse(row[3])
+                        };
+                        result.Add(transaction);
+                    }
+                    catch (Exception ex)
+                    {
+                        // TODO: Improve error message
+                        Console.WriteLine(ex.ToString());
+                    }
+                }
+            }
+            return result;
+        }
+
+        public List<Transaction> parseTransactionsFaster(string filePath)
+        {
+            // prepare the return object
+            List<Transaction> result = new List<Transaction>();
+
+            // using TextFieldParser as it is part of the common Microsoft.VisualBasic package
+            // potentially here could have used CSVHelper but it not part of the common package
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+                char[] delimiters = new char[] { ';' };
+                reader.ReadLine();
+
+                while (true)
+                {
+                    string line = reader.ReadLine();
+                    if (line == null)
+                    {
+                        break;
+                    }
+
+                    string[] row = line.Split(delimiters);
 
                     // added a try/catch to make sure if there is something the doesn't match
                     // Assumption 1, the program doesn't break unexpectedly

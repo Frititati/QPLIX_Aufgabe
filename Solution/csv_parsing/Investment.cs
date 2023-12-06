@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Solution.csv_parsing
+﻿namespace Solution.csv_parsing
 {
     internal class Investment
     {
+        // Didn't change the value names to make them standardized with the other classes, kept them like in the csv
         public string InvestorId { get; set; }
         public string InvestmentId { get; set; }
         public string InvestmentType { get; set; }
