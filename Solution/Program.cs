@@ -17,7 +17,7 @@ namespace Solution
 
             Console.WriteLine("Finished loading CSV files in: " + s1.Elapsed.TotalMilliseconds + "ms");
 
-            Console.WriteLine("write: date;investorid");
+            Console.WriteLine("Please indicate the date and the investorId, like so: <date>;<investorid>");
             //var line = Console.ReadLine();
             var line = "16/03/2019;Investor1";
             while (!string.IsNullOrEmpty(line))
@@ -35,7 +35,7 @@ namespace Solution
                 decimal stock_total_value = 0;
                 foreach (var item in stock_value_list)
                 {
-                    Console.WriteLine(item.ToString());
+                    // Console.WriteLine(item.ToString());
                     stock_total_value += item.TotalValue();
                 }
 
@@ -45,7 +45,7 @@ namespace Solution
                 decimal realestate_total_value = 0;
                 foreach (var item in realestate_value_list)
                 {
-                    Console.WriteLine(item.ToString());
+                    // Console.WriteLine(item.ToString());
                     realestate_total_value += item.TotalValue();
                 }
 
@@ -54,13 +54,15 @@ namespace Solution
                 decimal fond_total_value = 0;
                 foreach (var item in fond_value_list)
                 {
-                    Console.WriteLine(item.ToString());
+                    // Console.WriteLine(item.ToString());
                     fond_total_value += item.TotalValue();
                 }
 
+                Console.WriteLine("Investor: " + selected_investorId);
                 Console.WriteLine("Stock Total value: " + Decimal.Round(stock_total_value, 2));
                 Console.WriteLine("RealEstate Total value: " + Decimal.Round(realestate_total_value, 2));
                 Console.WriteLine("Fond Total value: " + Decimal.Round(fond_total_value, 2));
+                Console.WriteLine("Total value: " + Decimal.Round(stock_total_value + realestate_total_value + fond_total_value, 2));
                 s2.Stop();
                 Console.WriteLine("Execution took: " + s2.Elapsed.TotalMilliseconds + "ms");
                 // line = Console.ReadLine();
@@ -74,22 +76,35 @@ namespace Solution
             // the return List<StockValue>
             List<StockValue> stock_value_list = new();
 
-            // TODO objects here could be null
             foreach (var investment in stock_investments)
             {
                 // find all transactions that match this investments and respect the date limit
                 List<Transaction> local_transactions = all_transactions[investment.InvestmentId].FindAll(t => DateTime.Compare(t.Date, selected_date) <= 0);
+
+                // check that there are transactions
+                if (local_transactions.Count == 0)
+                {
+                    continue;
+                }
+
                 // calculate the number of shares
                 decimal number_of_shares = local_transactions.Sum(t => t.Value);
                 // find the last possible quotation of the stock price
-                Quote local_quote = all_quotes[investment.ISIN].FindLast(t => DateTime.Compare(t.Date, selected_date) <= 0);
+                Quote last_quote = all_quotes[investment.ISIN].FindLast(t => DateTime.Compare(t.Date, selected_date) <= 0);
+
+                if (last_quote == null)
+                {
+                    // if the last quote is null mean there is no available price
+                    // skip this transactions
+                    continue;
+                }
 
                 // add this stock to the total list of stocks
                 StockValue stock_value = new()
                 {
                     ISIN = investment.ISIN,
                     number_of_shared = number_of_shares,
-                    price_per_share = local_quote.PricePerShare
+                    price_per_share = last_quote.PricePerShare
                 };
                 stock_value_list.Add(stock_value);
             }
@@ -103,7 +118,6 @@ namespace Solution
             // the return List<RealEstateValue>
             List<RealEstateValue> realestate_value_list = new();
 
-            // TODO : obj here could be null
             foreach (var investment in realestate_investments)
             {
                 // find all transactions that match this investments and respect the date limit
@@ -151,6 +165,7 @@ namespace Solution
                 List<Transaction> local_transactions = all_transactions[investment.InvestmentId].FindAll(t => DateTime.Compare(t.Date, selected_date) <= 0);
                 decimal percentage_owned = local_transactions.Sum(t => t.Value);
 
+                // check that there are transactions or/and that the Fond is owned by the investor
                 if (percentage_owned == 0)
                 {
                     continue;
@@ -164,11 +179,13 @@ namespace Solution
                 decimal fond_stock_total_value = 0;
                 foreach (var item in fond_stock_value_list)
                 {
+                    // Console.WriteLine(item.ToString());
                     fond_stock_total_value += item.TotalValue();
                 }
                 decimal fond_realestate_total_value = 0;
                 foreach (var item in fond_realestate_value_list)
                 {
+                    // Console.WriteLine(item.ToString());
                     fond_realestate_total_value += item.TotalValue();
                 }
 

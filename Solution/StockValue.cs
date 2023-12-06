@@ -21,5 +21,7 @@ namespace Solution
             return "Name: " + ISIN + ";\tNumber of Shares: " + number_of_shared + ";\tPrice per Share: "
                 + price_per_share + ";\tTotal Value: " + Decimal.Round(TotalValue(), 2);
         }
+
+        // potentially one can be interested in the average price of purchase, this was not implemented for effiency reasons
     }
 }

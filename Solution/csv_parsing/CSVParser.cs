@@ -46,7 +46,7 @@ namespace Solution.csv_parsing
                     }
                     catch (Exception ex)
                     {
-                        // TODO: Improve error message
+                        Console.WriteLine("Error while parsing Transactions!");
                         Console.WriteLine(ex.ToString());
                     }
                 }
@@ -91,7 +91,7 @@ namespace Solution.csv_parsing
                     }
                     catch (Exception ex)
                     {
-                        // TODO: Improve error message
+                        Console.WriteLine("Error while parsing Transactions!");
                         Console.WriteLine(ex.ToString());
                     }
                 }
@@ -146,7 +146,7 @@ namespace Solution.csv_parsing
                     }
                     catch (Exception ex)
                     {
-                        // TODO: Improve error message
+                        Console.WriteLine("Error while parsing Transactions!");
                         Console.WriteLine(ex.ToString());
                     }
                 }
@@ -194,7 +194,7 @@ namespace Solution.csv_parsing
                     }
                     catch (Exception ex)
                     {
-                        // TODO: Improve error message
+                        Console.WriteLine("Error while parsing Quotes!");
                         Console.WriteLine(ex.ToString());
                     }
                 }
@@ -238,7 +238,7 @@ namespace Solution.csv_parsing
                     }
                     catch (Exception ex)
                     {
-                        // TODO: Improve error message
+                        Console.WriteLine("Error while parsing Quotes!");
                         Console.WriteLine(ex.ToString());
                     }
                 }
@@ -292,7 +292,7 @@ namespace Solution.csv_parsing
                     }
                     catch (Exception ex)
                     {
-                        // TODO: Improve error message
+                        Console.WriteLine("Error while parsing Quotes!");
                         Console.WriteLine(ex.ToString());
                     }
                 }
@@ -343,7 +343,7 @@ namespace Solution.csv_parsing
                     }
                     catch (Exception ex)
                     {
-                        // TODO: Improve error message
+                        Console.WriteLine("Error while parsing Investments!");
                         Console.WriteLine(ex.ToString());
                     }
                 }
@@ -390,7 +390,7 @@ namespace Solution.csv_parsing
                     }
                     catch (Exception ex)
                     {
-                        // TODO: Improve error message
+                        Console.WriteLine("Error while parsing Investments!");
                         Console.WriteLine(ex.ToString());
                     }
                 }
@@ -446,7 +446,7 @@ namespace Solution.csv_parsing
                     }
                     catch (Exception ex)
                     {
-                        // TODO: Improve error message
+                        Console.WriteLine("Error while parsing Investments!");
                         Console.WriteLine(ex.ToString());
                     }
                 }
