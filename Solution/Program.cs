@@ -10,23 +10,34 @@ namespace Solution
             Console.WriteLine("Hello, World!");
 
             CSVParser parser = new CSVParser();
+            //var s1 = Stopwatch.StartNew();
+            //List<Investment> all_investments = parser.parseInvestments("C:\\Users\\filip\\OneDrive\\Desktop\\QPLIX_Aufgabe\\Solution\\csv_file\\Investments.csv");
+            //s1.Stop();
+            //var s2 = Stopwatch.StartNew();
+            //List<Quote> all_quotes = parser.parseQuotes("C:\\Users\\filip\\OneDrive\\Desktop\\QPLIX_Aufgabe\\Solution\\csv_file\\Quotes.csv");
+            //s2.Stop();
+            //var s3 = Stopwatch.StartNew();
+            //List<Transaction> all_transactions = parser.parseTransactions("C:\\Users\\filip\\OneDrive\\Desktop\\QPLIX_Aufgabe\\Solution\\csv_file\\Transactions.csv");
+            //s3.Stop();
+
+            //Console.WriteLine(s1.Elapsed.TotalMilliseconds);
+            //Console.WriteLine(s2.Elapsed.TotalMilliseconds);
+            //Console.WriteLine(s3.Elapsed.TotalMilliseconds);
+
             var s1 = Stopwatch.StartNew();
-            List<Investment> investments = parser.parseInvestments("C:\\Users\\filip\\OneDrive\\Desktop\\QPLIX_Aufgabe\\Solution\\csv_file\\Investments.csv");
+            List<Investment> all_investments = parser.parseInvestmentsFaster("C:\\Users\\filip\\OneDrive\\Desktop\\QPLIX_Aufgabe\\Solution\\csv_file\\Investments.csv");
             s1.Stop();
             var s2 = Stopwatch.StartNew();
-            List<Quote> quotes = parser.parseQuotes("C:\\Users\\filip\\OneDrive\\Desktop\\QPLIX_Aufgabe\\Solution\\csv_file\\Quotes.csv");
+            List<Quote> all_quotes = parser.parseQuotesFaster("C:\\Users\\filip\\OneDrive\\Desktop\\QPLIX_Aufgabe\\Solution\\csv_file\\Quotes.csv");
             s2.Stop();
             var s3 = Stopwatch.StartNew();
-            List<Transaction> transactions = parser.parseTransactions("C:\\Users\\filip\\OneDrive\\Desktop\\QPLIX_Aufgabe\\Solution\\csv_file\\Transactions.csv");
+            List<Transaction> all_transactions = parser.parseTransactionsFaster("C:\\Users\\filip\\OneDrive\\Desktop\\QPLIX_Aufgabe\\Solution\\csv_file\\Transactions.csv");
             s3.Stop();
-            //var s4 = Stopwatch.StartNew();
-            //parser.parseTransactionsFaster("C:\\Users\\filip\\OneDrive\\Desktop\\QPLIX_Aufgabe\\Solution\\csv_file\\Transactions.csv");
-            //s4.Stop();
+
 
             Console.WriteLine(s1.Elapsed.TotalMilliseconds);
             Console.WriteLine(s2.Elapsed.TotalMilliseconds);
             Console.WriteLine(s3.Elapsed.TotalMilliseconds);
-            //Console.WriteLine(s4.Elapsed.TotalMilliseconds);
 
             Console.WriteLine("write: date;investorid");
             //var line = Console.ReadLine();
@@ -37,7 +48,7 @@ namespace Solution
                 var date = DateTime.Parse(input[0]);
                 var investorId = input[1];
 
-                List<Investment> local_investments = investments.FindAll(t => t.InvestorId == investorId);
+                List<Investment> local_investments = all_investments.FindAll(t => t.InvestorId == investorId);
 
                 // Start with finding out the value of all stocks
                 List<Investment> stock_investments = local_investments.FindAll(t => t.InvestmentType == "Stock");
@@ -46,11 +57,11 @@ namespace Solution
                 foreach (var item in stock_investments)
                 {
                     // find all transactions that match this investments and respect the date limit
-                    List<Transaction> local_transactions = transactions.FindAll(t => t.InvestmentId == item.InvestmentId && DateTime.Compare(t.Date, date) <= 0);
+                    List<Transaction> local_transactions = all_transactions.FindAll(t => t.InvestmentId == item.InvestmentId && DateTime.Compare(t.Date, date) <= 0);
                     // calculate the number of shares
                     decimal number_of_shares = local_transactions.Sum(t => t.Value);
                     // find the last possible quotation of the stock price
-                    Quote local_quote = quotes.FindLast(t => t.ISIN == item.ISIN && DateTime.Compare(t.Date, date) <= 0);
+                    Quote local_quote = all_quotes.FindLast(t => t.ISIN == item.ISIN && DateTime.Compare(t.Date, date) <= 0);
 
                     // add this stock to the total list of stocks
                     StockValue stock_value = new StockValue
@@ -74,7 +85,7 @@ namespace Solution
                 foreach (var item in realestate_investments)
                 {
                     // find all transactions that match this investments and respect the date limit
-                    List<Transaction> local_transactions = transactions.FindAll(t => t.InvestmentId == item.InvestmentId && DateTime.Compare(t.Date, date) <= 0);
+                    List<Transaction> local_transactions = all_transactions.FindAll(t => t.InvestmentId == item.InvestmentId && DateTime.Compare(t.Date, date) <= 0);
                     // get the individual estate transactions
                     List<Transaction> estate_transactions = local_transactions.FindAll(t => t.Type == "Estate");
                     // get the individual building transactions

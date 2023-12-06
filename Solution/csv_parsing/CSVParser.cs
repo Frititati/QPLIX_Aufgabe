@@ -60,8 +60,7 @@ namespace Solution.csv_parsing
             // prepare the return object
             List<Transaction> result = new List<Transaction>();
 
-            // using TextFieldParser as it is part of the common Microsoft.VisualBasic package
-            // potentially here could have used CSVHelper but it not part of the common package
+            // uses string Split() method, much faster the TextFieldParser
             using (StreamReader reader = new StreamReader(filePath))
             {
                 char[] delimiters = new char[] { ';' };
@@ -149,6 +148,50 @@ namespace Solution.csv_parsing
             return result;
         }
 
+        public List<Quote> parseQuotesFaster(string filePath)
+        {
+            // prepare the return object
+            List<Quote> result = new List<Quote>();
+
+            // uses string Split() method, much faster the TextFieldParser
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+                char[] delimiters = new char[] { ';' };
+                reader.ReadLine();
+
+                while (true)
+                {
+                    string line = reader.ReadLine();
+                    if (line == null)
+                    {
+                        break;
+                    }
+
+                    string[] row = line.Split(delimiters);
+
+                    // added a try/catch to make sure if there is something the doesn't match
+                    // Assumption 1, the program doesn't break unexpectedly
+                    try
+                    {
+                        // create a new object of Transaction and place all values from row inside the object
+                        Quote quote = new Quote
+                        {
+                            ISIN = row[0],
+                            Date = DateTime.Parse(row[1]),
+                            PricePerShare = Decimal.Parse(row[2])
+                        };
+                        result.Add(quote);
+                    }
+                    catch (Exception ex)
+                    {
+                        // TODO: Improve error message
+                        Console.WriteLine(ex.ToString());
+                    }
+                }
+            }
+            return result;
+        }
+
         public List<Investment> parseInvestments(string filePath)
         {
             // prepare the return object
@@ -179,6 +222,53 @@ namespace Solution.csv_parsing
                     try
                     {
                         // create a new object of Investment and place all values from row inside the object
+                        Investment investment = new Investment
+                        {
+                            InvestorId = row[0],
+                            InvestmentId = row[1],
+                            InvestmentType = row[2],
+                            ISIN = row[3],
+                            City = row[4],
+                            FondsInvestor = row[5],
+                        };
+                        result.Add(investment);
+                    }
+                    catch (Exception ex)
+                    {
+                        // TODO: Improve error message
+                        Console.WriteLine(ex.ToString());
+                    }
+                }
+            }
+            return result;
+        }
+
+        public List<Investment> parseInvestmentsFaster(string filePath)
+        {
+            // prepare the return object
+            List<Investment> result = new List<Investment>();
+
+            // uses string Split() method, much faster the TextFieldParser
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+                char[] delimiters = new char[] { ';' };
+                reader.ReadLine();
+
+                while (true)
+                {
+                    string line = reader.ReadLine();
+                    if (line == null)
+                    {
+                        break;
+                    }
+
+                    string[] row = line.Split(delimiters);
+
+                    // added a try/catch to make sure if there is something the doesn't match
+                    // Assumption 1, the program doesn't break unexpectedly
+                    try
+                    {
+                        // create a new object of Transaction and place all values from row inside the object
                         Investment investment = new Investment
                         {
                             InvestorId = row[0],
