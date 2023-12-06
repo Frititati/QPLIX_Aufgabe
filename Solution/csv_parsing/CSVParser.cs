@@ -5,6 +5,7 @@ namespace Solution.csv_parsing
 {
     internal class CSVParser
     {
+        // in charger of parsing the CSV file to different object structures, most efficient is Dictionary<string, List<T>>
         public List<Transaction> ParseTransactions(string filePath)
         {
             // prepare the return object

@@ -5,8 +5,6 @@ Assumption 2:
 Assumption 3:
 	- The date provided in the input string, is just a date without time.
 Assumption 4:
-	- The 
-Assumption 5:
 	- A Fond does not invest in another fond (found from data analysis), only Stock and/or RealEstate.
-Assumption 6:
+Assumption 5:
 	- The value are in Euro, but I didn't put the euro sign before numbers

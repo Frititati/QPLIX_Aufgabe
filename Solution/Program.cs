@@ -8,6 +8,9 @@ namespace Solution
     {
         static void Main(string[] args)
         {
+            // change to true to see all components in details that make up the entire value of the portfolio at the chosen date
+            bool verbose = false;
+
             CSVParser parser = new();
             Console.WriteLine("Loading CSV files");
             var s1 = Stopwatch.StartNew();
@@ -48,6 +51,7 @@ namespace Solution
                 var selected_date = DateTime.Parse(input[0]);
                 var selected_investorId = input[1];
 
+                // start stopwatch for execution time monitoring
                 var s2 = Stopwatch.StartNew();
 
                 List<Investment> filtered_investments_list = all_investments[selected_investorId];
@@ -58,7 +62,7 @@ namespace Solution
                 decimal stock_total_value = 0;
                 foreach (var item in stock_value_list)
                 {
-                    // Console.WriteLine(item.ToString());
+                    if (verbose) { Console.WriteLine(item.ToString()); }
                     stock_total_value += item.TotalValue();
                 }
 
@@ -68,7 +72,7 @@ namespace Solution
                 decimal realestate_total_value = 0;
                 foreach (var item in realestate_value_list)
                 {
-                    // Console.WriteLine(item.ToString());
+                    if (verbose) { Console.WriteLine(item.ToString()); }
                     realestate_total_value += item.TotalValue();
                 }
 
@@ -77,7 +81,7 @@ namespace Solution
                 decimal fond_total_value = 0;
                 foreach (var item in fond_value_list)
                 {
-                    // Console.WriteLine(item.ToString());
+                    if (verbose) { Console.WriteLine(item.ToString()); }
                     fond_total_value += item.TotalValue();
                 }
 
@@ -159,8 +163,8 @@ namespace Solution
                 }
 
                 // here we know these values will not be out of bounds
-                Decimal estate_inital_value = estate_transactions[0].Value;
-                Decimal building_inital_value = building_transactions[0].Value;
+                decimal estate_inital_value = estate_transactions[0].Value;
+                decimal building_inital_value = building_transactions[0].Value;
 
                 // create the RealEstateValue object
                 RealEstateValue real_estate_value = new()
