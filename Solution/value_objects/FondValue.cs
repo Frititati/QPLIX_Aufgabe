@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Solution
+﻿
+namespace Solution.value_objects
 {
     internal class FondValue
     {
@@ -20,9 +15,9 @@ namespace Solution
         }
         public override string ToString()
         {
-            return "Name: " + name + ";\tRealEstate Value: " + Decimal.Round(real_estate_value, 2)
-                + ";\tStock Value: " + Decimal.Round(stock_value, 2) + ";\tPercentage Owned: "
-                + Decimal.Round(percentage_owned, 3) + ";\tTotal Value: " + Decimal.Round(TotalValue(), 2);
+            return "Name: " + name + ";\tRealEstate Value: " + decimal.Round(real_estate_value, 2)
+                + ";\tStock Value: " + decimal.Round(stock_value, 2) + ";\tPercentage Owned: "
+                + decimal.Round(percentage_owned, 3) + ";\tTotal Value: " + decimal.Round(TotalValue(), 2);
         }
     }
 }

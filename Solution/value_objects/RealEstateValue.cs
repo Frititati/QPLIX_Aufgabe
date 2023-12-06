@@ -1,6 +1,6 @@
 ﻿using Solution.csv_parsing;
 
-namespace Solution
+namespace Solution.value_objects
 {
     internal class RealEstateValue
     {
@@ -34,9 +34,9 @@ namespace Solution
         }
         public override string ToString()
         {
-            return "Name: " + name + ";\tBuilding Initial Value: " + Decimal.Round(building_initial_price) + ";\tBuilding Updates in Value: "
-                + Decimal.Round(building_update_price, 2) + ";\tEstate Initial Value: " + Decimal.Round(estate_initial_price, 2)
-                + ";\tEstate Updates in Price: " + Decimal.Round(estate_update_price, 2) + ";\tTotal Value: " + Decimal.Round(TotalValue(), 2);
+            return "Name: " + name + ";\tBuilding Initial Value: " + decimal.Round(building_initial_price) + ";\tBuilding Updates in Value: "
+                + decimal.Round(building_update_price, 2) + ";\tEstate Initial Value: " + decimal.Round(estate_initial_price, 2)
+                + ";\tEstate Updates in Price: " + decimal.Round(estate_update_price, 2) + ";\tTotal Value: " + decimal.Round(TotalValue(), 2);
         }
     }
 }

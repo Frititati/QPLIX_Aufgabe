@@ -5,7 +5,7 @@ namespace Solution.csv_parsing
 {
     internal class CSVParser
     {
-        public List<Transaction> parseTransactions(string filePath)
+        public List<Transaction> ParseTransactions(string filePath)
         {
             // prepare the return object
             List<Transaction> result = new List<Transaction>();
@@ -54,7 +54,7 @@ namespace Solution.csv_parsing
             return result;
         }
 
-        public List<Transaction> parseTransactionsFaster(string filePath)
+        public List<Transaction> ParseTransactionsFaster(string filePath)
         {
             // prepare the return object
             List<Transaction> result = new List<Transaction>();
@@ -99,62 +99,69 @@ namespace Solution.csv_parsing
             return result;
         }
 
-        public Dictionary<string, List<Transaction>> parseTransactionsFasterDictionary(string filePath)
+        public Dictionary<string, List<Transaction>> ParseTransactionsDictionary(string filePath)
         {
-            // prepare the return object
+            // prepare the return object, using a dictionary for fast access times
             Dictionary<string, List<Transaction>> result = new();
-
-            // uses string Split() method, much faster the TextFieldParser
-            using (StreamReader reader = new StreamReader(filePath))
+            try
             {
-                char[] delimiters = new char[] { ';' };
-                reader.ReadLine();
-
-                while (true)
+                // uses string Split() method, much faster the TextFieldParser
+                using (StreamReader reader = new StreamReader(filePath))
                 {
-                    string line = reader.ReadLine();
-                    if (line == null)
+                    char[] delimiters = new char[] { ';' };
+                    reader.ReadLine();
+
+                    while (true)
                     {
-                        break;
-                    }
-
-                    string[] row = line.Split(delimiters);
-
-                    // added a try/catch to make sure if there is something the doesn't match
-                    // Assumption 1, the program doesn't break unexpectedly
-                    try
-                    {
-                        // create a new object of Transaction and place all values from row inside the object
-                        Transaction transaction = new Transaction
+                        string line = reader.ReadLine();
+                        if (line == null)
                         {
-                            Type = row[1],
-                            Date = DateTime.Parse(row[2]),
-                            Value = Decimal.Parse(row[3])
-                        };
-
-                        if (result.ContainsKey(row[0]))
-                        {
-                            // update the existing entry
-                            result[row[0]].Add(transaction);
+                            break;
                         }
-                        else
-                        {
-                            // create new entry
-                            result[row[0]] = new List<Transaction> { transaction };
 
+                        string[] row = line.Split(delimiters);
+
+                        // added a try/catch to make sure if there is something the doesn't match
+                        // Assumption 1, the program doesn't break unexpectedly
+                        try
+                        {
+                            // create a new object of Transaction and place all values from row inside the object
+                            Transaction transaction = new Transaction
+                            {
+                                Type = row[1],
+                                Date = DateTime.Parse(row[2]),
+                                Value = Decimal.Parse(row[3])
+                            };
+
+                            if (result.ContainsKey(row[0]))
+                            {
+                                // update the existing entry
+                                result[row[0]].Add(transaction);
+                            }
+                            else
+                            {
+                                // create new entry
+                                result[row[0]] = new List<Transaction> { transaction };
+
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Error while parsing Transactions!");
-                        Console.WriteLine(ex.ToString());
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Error while parsing Transactions!");
+                            Console.WriteLine(ex.ToString());
+                        }
                     }
                 }
+            }
+            catch (FileNotFoundException ex)
+            {
+                // add this such that we can break the execution in Program.cs
+                throw new FileNotFoundException("Quotes CSV file not found! : " + ex.Message);
             }
             return result;
         }
 
-        public List<Quote> parseQuotes(string filePath)
+        public List<Quote> ParseQuotes(string filePath)
         {
             // prepare the return object
             List<Quote> result = new List<Quote>();
@@ -202,7 +209,7 @@ namespace Solution.csv_parsing
             return result;
         }
 
-        public List<Quote> parseQuotesFaster(string filePath)
+        public List<Quote> ParseQuotesFaster(string filePath)
         {
             // prepare the return object
             List<Quote> result = new List<Quote>();
@@ -246,61 +253,68 @@ namespace Solution.csv_parsing
             return result;
         }
 
-        public Dictionary<string, List<Quote>> parseQuotesFasterDictionary(string filePath)
+        public Dictionary<string, List<Quote>> ParseQuotesDictionary(string filePath)
         {
-            // prepare the return object
+            // prepare the return object, using a dictionary for fast access times
             Dictionary<string, List<Quote>> result = new();
-
-            // uses string Split() method, much faster the TextFieldParser
-            using (StreamReader reader = new StreamReader(filePath))
+            try
             {
-                char[] delimiters = new char[] { ';' };
-                reader.ReadLine();
-
-                while (true)
+                // uses string Split() method, much faster the TextFieldParser
+                using (StreamReader reader = new StreamReader(filePath))
                 {
-                    string line = reader.ReadLine();
-                    if (line == null)
+                    char[] delimiters = new char[] { ';' };
+                    reader.ReadLine();
+
+                    while (true)
                     {
-                        break;
-                    }
-
-                    string[] row = line.Split(delimiters);
-
-                    // added a try/catch to make sure if there is something the doesn't match
-                    // Assumption 1, the program doesn't break unexpectedly
-                    try
-                    {
-                        // create a new object of Transaction and place all values from row inside the object
-                        Quote quote = new Quote
+                        string line = reader.ReadLine();
+                        if (line == null)
                         {
-                            // ISIN = row[0],
-                            Date = DateTime.Parse(row[1]),
-                            PricePerShare = Decimal.Parse(row[2])
-                        };
-
-                        if (result.ContainsKey(row[0]))
-                        {
-                            // update the existing entry
-                            result[row[0]].Add(quote);
+                            break;
                         }
-                        else
+
+                        string[] row = line.Split(delimiters);
+
+                        // added a try/catch to make sure if there is something the doesn't match
+                        // Assumption 1, the program doesn't break unexpectedly
+                        try
                         {
-                            // create new entry
-                            result[row[0]] = new List<Quote> { quote };
+                            // create a new object of Transaction and place all values from row inside the object
+                            Quote quote = new Quote
+                            {
+                                // ISIN = row[0],
+                                Date = DateTime.Parse(row[1]),
+                                PricePerShare = Decimal.Parse(row[2])
+                            };
+
+                            if (result.ContainsKey(row[0]))
+                            {
+                                // update the existing entry
+                                result[row[0]].Add(quote);
+                            }
+                            else
+                            {
+                                // create new entry
+                                result[row[0]] = new List<Quote> { quote };
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Error while parsing Quotes!");
-                        Console.WriteLine(ex.ToString());
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Error while parsing Quotes!");
+                            Console.WriteLine(ex.ToString());
+                        }
                     }
                 }
+            }
+            catch (FileNotFoundException ex)
+            {
+                // add this such that we can break the execution in Program.cs
+                throw new FileNotFoundException("Quotes CSV file not found! : " + ex.Message);
             }
             return result;
         }
 
-        public List<Investment> parseInvestments(string filePath)
+        public List<Investment> ParseInvestments(string filePath)
         {
             // prepare the return object
             List<Investment> result = new List<Investment>();
@@ -351,7 +365,7 @@ namespace Solution.csv_parsing
             return result;
         }
 
-        public List<Investment> parseInvestmentsFaster(string filePath)
+        public List<Investment> ParseInvestmentsFaster(string filePath)
         {
             // prepare the return object
             List<Investment> result = new List<Investment>();
@@ -397,59 +411,67 @@ namespace Solution.csv_parsing
             }
             return result;
         }
-        public Dictionary<string, List<Investment>> parseInvestmentsFasterDictionary(string filePath)
+        public Dictionary<string, List<Investment>> ParseInvestmentsDictionary(string filePath)
         {
-            // prepare the return object
+            // prepare the return object, using a dictionary for fast access times
             Dictionary<string, List<Investment>> result = new();
 
             // uses string Split() method, much faster the TextFieldParser
-            using (StreamReader reader = new StreamReader(filePath))
+            try
             {
-                char[] delimiters = new char[] { ';' };
-                reader.ReadLine();
-
-                while (true)
+                using (StreamReader reader = new StreamReader(filePath))
                 {
-                    string line = reader.ReadLine();
-                    if (line == null)
+                    char[] delimiters = new char[] { ';' };
+                    reader.ReadLine();
+
+                    while (true)
                     {
-                        break;
-                    }
-
-                    string[] row = line.Split(delimiters);
-
-                    // added a try/catch to make sure if there is something the doesn't match
-                    // Assumption 1, the program doesn't break unexpectedly
-                    try
-                    {
-                        // create a new object of Transaction and place all values from row inside the object
-                        Investment investment = new Investment
+                        string line = reader.ReadLine();
+                        if (line == null)
                         {
-                            // InvestorId = row[0],
-                            InvestmentId = row[1],
-                            InvestmentType = row[2],
-                            ISIN = row[3],
-                            City = row[4],
-                            FondsInvestor = row[5],
-                        };
-
-                        if (result.ContainsKey(row[0]))
-                        {
-                            // update the existing entry
-                            result[row[0]].Add(investment);
+                            break;
                         }
-                        else
+
+                        string[] row = line.Split(delimiters);
+
+                        // added a try/catch to make sure if there is something the doesn't match
+                        // Assumption 1, the program doesn't break unexpectedly
+                        try
                         {
-                            // create a new entry
-                            result[row[0]] = new List<Investment> { investment };
+                            // create a new object of Transaction and place all values from row inside the object
+                            Investment investment = new Investment
+                            {
+                                // InvestorId = row[0],
+                                InvestmentId = row[1],
+                                InvestmentType = row[2],
+                                ISIN = row[3],
+                                City = row[4],
+                                FondsInvestor = row[5],
+                            };
+
+                            if (result.ContainsKey(row[0]))
+                            {
+                                // update the existing entry
+                                result[row[0]].Add(investment);
+                            }
+                            else
+                            {
+                                // create a new entry
+                                result[row[0]] = new List<Investment> { investment };
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Error while parsing Investments!");
-                        Console.WriteLine(ex.ToString());
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Error while parsing Investments!");
+                            Console.WriteLine(ex.ToString());
+                        }
                     }
                 }
+            }
+            catch (FileNotFoundException ex)
+            {
+                // add this such that we can break the execution in Program.cs
+                throw new FileNotFoundException("Investment CSV file not found! : " + ex.Message);
             }
             return result;
         }

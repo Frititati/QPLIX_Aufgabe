@@ -1,4 +1,5 @@
 ﻿using Solution.csv_parsing;
+using Solution.value_objects;
 using System.Diagnostics;
 
 namespace Solution
@@ -10,26 +11,48 @@ namespace Solution
             CSVParser parser = new();
             Console.WriteLine("Loading CSV files");
             var s1 = Stopwatch.StartNew();
-            Dictionary<string, List<Investment>> all_investments = parser.parseInvestmentsFasterDictionary("C:\\Users\\filip\\OneDrive\\Desktop\\QPLIX_Aufgabe\\Solution\\csv_file\\Investments.csv");
-            Dictionary<string, List<Quote>> all_quotes = parser.parseQuotesFasterDictionary("C:\\Users\\filip\\OneDrive\\Desktop\\QPLIX_Aufgabe\\Solution\\csv_file\\Quotes.csv");
-            Dictionary<string, List<Transaction>> all_transactions = parser.parseTransactionsFasterDictionary("C:\\Users\\filip\\OneDrive\\Desktop\\QPLIX_Aufgabe\\Solution\\csv_file\\Transactions.csv");
+
+            Dictionary<string, List<Investment>> all_investments = new();
+            Dictionary<string, List<Quote>> all_quotes = new();
+            Dictionary<string, List<Transaction>> all_transactions = new();
+            try
+            {
+                // fetch csv file data and place it into the dictionary <-> list structure for fast access times
+                all_investments = parser.ParseInvestmentsDictionary(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "csv_file", "Investments.csv"));
+                all_quotes = parser.ParseQuotesDictionary(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "csv_file", "Quotes.csv"));
+                all_transactions = parser.ParseTransactionsDictionary(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "csv_file", "Transactions.csv"));
+            }
+            catch (Exception ex)
+            {
+                // catches any exceptions (expecting most FileNotFound) and halts the program
+                Console.WriteLine(ex.Message);
+                System.Environment.Exit(0);
+            }
             s1.Stop();
 
             Console.WriteLine("Finished loading CSV files in: " + s1.Elapsed.TotalMilliseconds + "ms");
 
             Console.WriteLine("Please indicate the date and the investorId, like so: <date>;<investorid>");
-            //var line = Console.ReadLine();
-            var line = "16/03/2019;Investor1";
+            var line = Console.ReadLine();
+
             while (!string.IsNullOrEmpty(line))
             {
-                var s2 = Stopwatch.StartNew();
+                // validate that the input data can be processed
+                if (!ValidateInputData(line, all_investments.Keys.ToList()))
+                {
+                    Console.WriteLine("Please try again, like so: <date>;<investorid>");
+                    line = Console.ReadLine();
+                    continue;
+                }
                 var input = line.Split(";");
                 var selected_date = DateTime.Parse(input[0]);
                 var selected_investorId = input[1];
 
-                List<Investment> filtered_investments = all_investments[selected_investorId];
+                var s2 = Stopwatch.StartNew();
 
-                List<StockValue> stock_value_list = ProcessStockInvestments(all_transactions, all_quotes, filtered_investments, selected_date);
+                List<Investment> filtered_investments_list = all_investments[selected_investorId];
+
+                List<StockValue> stock_value_list = ProcessStockInvestments(all_transactions, all_quotes, filtered_investments_list, selected_date);
 
                 // this prints out all the of the invested stocks (limited to the correct date) and their value
                 decimal stock_total_value = 0;
@@ -40,7 +63,7 @@ namespace Solution
                 }
 
                 // Here we calculate the RealEstate investment
-                List<RealEstateValue> realestate_value_list = ProcessRealEstateInvestments(all_transactions, filtered_investments, selected_date);
+                List<RealEstateValue> realestate_value_list = ProcessRealEstateInvestments(all_transactions, filtered_investments_list, selected_date);
 
                 decimal realestate_total_value = 0;
                 foreach (var item in realestate_value_list)
@@ -49,7 +72,7 @@ namespace Solution
                     realestate_total_value += item.TotalValue();
                 }
 
-                List<FondValue> fond_value_list = ProcessFondValue(all_transactions, all_investments, all_quotes, filtered_investments, selected_date);
+                List<FondValue> fond_value_list = ProcessFondValue(all_transactions, all_investments, all_quotes, filtered_investments_list, selected_date);
 
                 decimal fond_total_value = 0;
                 foreach (var item in fond_value_list)
@@ -58,15 +81,16 @@ namespace Solution
                     fond_total_value += item.TotalValue();
                 }
 
-                Console.WriteLine("Investor: " + selected_investorId);
+                Console.WriteLine(selected_investorId + " Summary:");
                 Console.WriteLine("Stock Total value: " + Decimal.Round(stock_total_value, 2));
                 Console.WriteLine("RealEstate Total value: " + Decimal.Round(realestate_total_value, 2));
                 Console.WriteLine("Fond Total value: " + Decimal.Round(fond_total_value, 2));
                 Console.WriteLine("Total value: " + Decimal.Round(stock_total_value + realestate_total_value + fond_total_value, 2));
                 s2.Stop();
                 Console.WriteLine("Execution took: " + s2.Elapsed.TotalMilliseconds + "ms");
-                // line = Console.ReadLine();
-                line = "";
+
+                Console.WriteLine("Please write new entry, like so: <date>;<investorid>");
+                line = Console.ReadLine();
             }
         }
         private static List<StockValue> ProcessStockInvestments(Dictionary<string, List<Transaction>> all_transactions, Dictionary<string, List<Quote>> all_quotes, List<Investment> investments, DateTime selected_date)
@@ -200,6 +224,32 @@ namespace Solution
                 fond_value_list.Add(fond_value);
             }
             return fond_value_list;
+        }
+
+        private static bool ValidateInputData(string input_data, List<string> valid_investors)
+        {
+            string[] parts = input_data.Split(';');
+
+            if (parts.Length != 2)
+            {
+                Console.WriteLine("Missing one of the input parameters, please write <Date>;<InvestorId>");
+                return false;
+            }
+
+            if (!DateTime.TryParse(parts[0], out _))
+            {
+                Console.WriteLine("Date inserted is not valid.");
+                return false;
+            }
+
+            // check if the investor starts with Investor and is within the list of valid investors
+            if (!parts[1].StartsWith("Investor") || !valid_investors.Contains(parts[1]))
+            {
+                Console.WriteLine("Investor inserted is not valid.");
+                return false;
+            }
+
+            return true;
         }
     }
 }

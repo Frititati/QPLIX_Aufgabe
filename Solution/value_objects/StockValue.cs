@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Solution
+﻿namespace Solution.value_objects
 {
     internal class StockValue
     {
@@ -19,7 +13,7 @@ namespace Solution
         public override string ToString()
         {
             return "Name: " + ISIN + ";\tNumber of Shares: " + number_of_shared + ";\tPrice per Share: "
-                + price_per_share + ";\tTotal Value: " + Decimal.Round(TotalValue(), 2);
+                + price_per_share + ";\tTotal Value: " + decimal.Round(TotalValue(), 2);
         }
 
         // potentially one can be interested in the average price of purchase, this was not implemented for effiency reasons
